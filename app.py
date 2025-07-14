@@ -1,14 +1,5 @@
-#!/usr/bin/env python3
-"""
-Site Status Checker — mini-webapp
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-• Vérifie l’état (OK / KO / DOWN) d’une liste de domaines.
-• Mode sombre total, copy‑to‑clipboard compatible iOS/Safari, auto‑refresh.
-• Dépendances : Flask & requests
-"""
-
 import concurrent.futures as cf
-from typing import Dict, List, Union
+from typing import Dict, List
 
 import requests
 from flask import Flask, render_template_string
@@ -19,6 +10,7 @@ DOMAINS = [
     "Malgrim.com", "Mobnab.com", "Moovbob.com", "Rogzov.com", "Tarbob.com", "Trifak.com",
     "Valdap.com", "Vredap.com", "Wifrad.com", "Yakriv.com",
 ]
+
 TIMEOUT, MAX_WORKERS, REFRESH_MS = 5, 10, 30_000
 HEADERS = {
     "User-Agent": (
@@ -97,6 +89,3 @@ def index():
         rows: List[Dict[str, str]] = list(exe.map(check_site, DOMAINS))
     rows.sort(key=lambda r: r['domain'].lower())
     return render_template_string(TEMPLATE, rows=rows, REFRESH_MS=REFRESH_MS)
-
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8000)
